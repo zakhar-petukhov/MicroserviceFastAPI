@@ -1,0 +1,9 @@
+fastapi
+gino
+email-validator
+passlib[bcrypt]
+pyjwt
+pyyaml
+uvicorn
+alembic
+psycopg2-binary

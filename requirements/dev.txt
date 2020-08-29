@@ -1,0 +1,3 @@
+black
+isort>=5
+flake8

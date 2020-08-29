@@ -1,0 +1,276 @@
+openapi: 3.0.2
+info:
+  title: Web app
+  version: '1.0'
+paths:
+  /user/registry:
+    post:
+      summary: Register User
+      operationId: register_user_user_registry_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisplayUser'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /user/auth:
+    post:
+      summary: Authenticate User
+      operationId: authenticate_user_user_auth_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthUser'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /user/{user_id}:
+    get:
+      summary: Get User Data
+      operationId: get_user_data_user__user_id__get
+      parameters:
+      - required: true
+        schema:
+          title: User Id
+          type: integer
+        name: user_id
+        in: path
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisplayUser'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /offer/create:
+    post:
+      summary: Create Offer
+      operationId: create_offer_offer_create_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOffer'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Offer'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /offer/:
+    post:
+      summary: Get Offer
+      operationId: get_offer_offer__post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OfferRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Get Offer Offer  Post
+                anyOf:
+                - $ref: '#/components/schemas/Offer'
+                - type: array
+                  items:
+                    $ref: '#/components/schemas/Offer'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    AuthResponse:
+      title: AuthResponse
+      required:
+      - id
+      - access_token
+      - refresh_token
+      type: object
+      properties:
+        id:
+          title: Id
+          type: integer
+        access_token:
+          title: Access Token
+          type: string
+        refresh_token:
+          title: Refresh Token
+          type: string
+    AuthUser:
+      title: AuthUser
+      required:
+      - username
+      - password
+      type: object
+      properties:
+        username:
+          title: Username
+          type: string
+        password:
+          title: Password
+          type: string
+    CreateOffer:
+      title: CreateOffer
+      required:
+      - title
+      - text
+      - user_id
+      type: object
+      properties:
+        title:
+          title: Title
+          type: string
+        text:
+          title: Text
+          type: string
+        user_id:
+          title: User Id
+          type: integer
+    CreateUser:
+      title: CreateUser
+      required:
+      - email
+      - username
+      - password
+      type: object
+      properties:
+        email:
+          title: Email
+          type: string
+          format: email
+        username:
+          title: Username
+          type: string
+        password:
+          title: Password
+          type: string
+    DisplayUser:
+      title: DisplayUser
+      required:
+      - email
+      - username
+      - id
+      - offers
+      type: object
+      properties:
+        email:
+          title: Email
+          type: string
+          format: email
+        username:
+          title: Username
+          type: string
+        id:
+          title: Id
+          type: integer
+        offers:
+          title: Offers
+          type: array
+          items:
+            $ref: '#/components/schemas/Offer'
+    HTTPValidationError:
+      title: HTTPValidationError
+      type: object
+      properties:
+        detail:
+          title: Detail
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+    Offer:
+      title: Offer
+      required:
+      - title
+      - text
+      - user_id
+      - id
+      type: object
+      properties:
+        title:
+          title: Title
+          type: string
+        text:
+          title: Text
+          type: string
+        user_id:
+          title: User Id
+          type: integer
+        id:
+          title: Id
+          type: integer
+    OfferRequest:
+      title: OfferRequest
+      type: object
+      properties:
+        user_id:
+          title: User Id
+          type: integer
+        offer_id:
+          title: Offer Id
+          type: integer
+    ValidationError:
+      title: ValidationError
+      required:
+      - loc
+      - msg
+      - type
+      type: object
+      properties:
+        loc:
+          title: Location
+          type: array
+          items:
+            type: string
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
